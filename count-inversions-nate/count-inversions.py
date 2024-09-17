@@ -1,34 +1,35 @@
 import os
 
 def merge_sort(arr):
+    # base case
     if len(arr) <= 1:
         return arr
 
+    # split down middle
     mid = len(arr) // 2
     leftHalf = arr[:mid]
     rightHalf = arr[mid:]
 
+    # recursion
     sortedLeft = merge_sort(leftHalf)
     sortedRight = merge_sort(rightHalf)
 
-    return merge(sortedLeft, sortedRight)
-
-def merge(left, right):
+    # merge step
     global inversions
     result = []
     i = j = 0
 
-    while i < len(left) and j < len(right):
-        if left[i] <= right[j]:
-            result.append(left[i])
+    while i < len(sortedLeft) and j < len(sortedRight):
+        if sortedLeft[i] <= sortedRight[j]:
+            result.append(sortedLeft[i])
             i += 1
         else:
-            result.append(right[j])
-            inversions += len(left) - i
+            result.append(sortedRight[j])
+            inversions += len(sortedLeft) - i
             j += 1
 
-    result.extend(left[i:])
-    result.extend(right[j:])
+    result.extend(sortedLeft[i:])
+    result.extend(sortedRight[j:])
 
     return result
 
