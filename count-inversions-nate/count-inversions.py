@@ -1,3 +1,6 @@
+# Count Inversions
+# Nathan Hanzel
+
 import os
 
 def merge_sort(arr):
@@ -36,10 +39,11 @@ def merge_sort(arr):
 #
 # main
 #
+
+# reading example-1
 inversions = 0
 arr = []
 script_dir = os.path.dirname(__file__)
-# reading example-1
 ex_one = open(os.path.join(script_dir, "example-1.txt"))
 for num in ex_one:
     arr.append(int(num))
