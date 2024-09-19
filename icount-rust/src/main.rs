@@ -6,44 +6,33 @@ use std::fs::File;
 
 fn main() {
     let stdout = stdout();
-    let mut fpath = env::current_dir().expect("Failed to get current directory...");
-    fpath.push(r"tests");
-    //fpath.push(r"simple.txt");
-    //fpath.push(r"backwards.txt");
-    fpath.push(r"example-2.txt");
+    let fpaths = [r"simple.txt", r"backwards.txt", r"example-2.txt"];
+    for fp in fpaths {
+        let mut fpath = env::current_dir().expect("Failed to get current directory...");
+        fpath.push(r"tests");
+        fpath.push(fp);
+        println!("Attempting to open test file at:");
+        println!("{}", fpath.display());
     
-    println!("Attempting to open test file at:");
-    println!("{}", fpath.display());
-
-    // Read test file and construct array
-    let file = File::open(&fpath).expect("Failed to open test file...");// On error this terminates the main function and therefore the
-                                                                        // program, returning the error
-    let reader = std::io::BufReader::new(file);
-    let mut integers = Vec::new();
-    for line in reader.lines() {
-        let line = line.expect("Could not read line from file..."); // Handle any I/O error
-        let number: i32 = line.trim().parse().expect("Could not parse line in file... is it an integer?"); // Parse the line to an integer
-        integers.push(number);
+        // Read test file and construct array
+        let file = File::open(&fpath).expect("Failed to open test file...");// On error this terminates the main function and therefore the
+                                                                            // program, returning the error
+        let reader = std::io::BufReader::new(file);
+        let mut integers = Vec::new();
+        for line in reader.lines() {
+            let line = line.expect("Could not read line from file..."); // Handle any I/O error
+            let number: i32 = line.trim().parse().expect("Could not parse line in file... is it an integer?"); // Parse the line to an integer
+            integers.push(number);
+        }
+    
+        // Driver
+        let result = mergesort(&mut integers);
+        // Greeting
+        let message = format!("Found {} inversions!", result);
+        let width = message.chars().count();
+        let mut writer = BufWriter::new(stdout.lock());
+        say(&message, width, &mut writer).unwrap();
     }
-
-    // Print items from file (Debug)
-//    for number in &integers {
-//        println!("{}", number);
-//    }
-
-    // Driver
-    let result = mergesort(&mut integers);
-//    println!("Found {} inversions", result);
-    // Print sorted items (Debug)
-//    for number in integers {
-//        println!("{}", number);
-//    }
-
-    // Greeting
-    let message = format!("Found {} inversions!", result);
-    let width = message.chars().count();
-    let mut writer = BufWriter::new(stdout.lock());
-    say(&message, width, &mut writer).unwrap();
 }
 fn mergesort(arr: &mut Vec<i32>) -> usize{
     let len = arr.len();
